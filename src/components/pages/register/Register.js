@@ -34,7 +34,7 @@ const Register = () => {
             }  
         });
 
-         
+        alert('Thanks for seeing my code:) Unfortunately, the API on which this app was built may not be available anymore and it is not under my control :('); 
 
     };
 
