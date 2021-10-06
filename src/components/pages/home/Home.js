@@ -52,7 +52,13 @@ const Home = () => {
         const confirmeDelete = window.confirm("Delete all tasks?");
 
         if(confirmeDelete === true) {
-            setNewTask([]); 
+            if(status === 'All') {
+                setNewTask([])
+            } else if(status === 'Completed') {
+                setNewTask(newTask.filter((item) => item.completed !== true))
+            } else if(status === 'Uncompleted') {
+                setNewTask(newTask.filter((item) => item.completed !== false))
+            }
         }
     
     };
