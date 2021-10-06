@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from "axios";
+ 
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -10,20 +10,10 @@ function Task({text, task, newTask, setNewTask}) {
     const deleteHandler = () => {
 
         setNewTask(newTask.filter((item) => item.id !== task.id));
-
-        axios.delete('https://cors-anywhere.herokuapp.com/https://todo-application-2.herokuapp.com/action', {
-            data: {
-                id: task.id
-            } 
-                     
-        })
-        .then(res => {
-             
-            console.log('DELETE', res);
-        })  
-         
-             
+        
     };
+
+     
 
     const completeHandler = () => {
         setNewTask(newTask.map((item) => {
@@ -35,27 +25,8 @@ function Task({text, task, newTask, setNewTask}) {
 
             } else {
                 return item;
-            }
-
-             
-        }))
-
-        
-
-             
-            axios.put('https://cors-anywhere.herokuapp.com/https://todo-application-2.herokuapp.com/action', {
-                 
-                id: task.id,
-                isDone: !task.completed,
-                  
-                         
-            })
-            .then(res => {
-                 
-                console.log('PUT',res);
-            })  
-         
-             
+            }     
+        }))  
     }; 
 
 

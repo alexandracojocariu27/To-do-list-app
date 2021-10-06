@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import axios from "axios";
 import {useForm} from "react-hook-form";
 import "./Login.css";
 
@@ -13,29 +12,13 @@ const Login = () => {
     const {register, handleSubmit, formState: { errors }} = useForm();
     const [passwordInputType, setPasswordInputType] = useState('password')
 
-    
+   
     const submitLoginHandler = (data) => {
         
-        axios.post('https://cors-anywhere.herokuapp.com/https://todo-application-2.herokuapp.com/loginPerson', {
-            email: data.email,
-            password: data.password,  
-        })
-        .then(res => {
-            if(typeof res.data === "object") {
-                 
-                localStorage.setItem('isLoggedIn', true);
-                localStorage.setItem('userId', res.data.id);
-                localStorage.setItem('userEmail', res.data.email);
+        localStorage.setItem('isLoggedIn', true);
+        localStorage.setItem('userEmail', data.email);
+        window.location.href="/";
                 
-                window.location.href="/";
-            } else {
-                alert(res.data);
-            }
-             
-        });
-
-       
-
     };
 
     const showPassword = () => {

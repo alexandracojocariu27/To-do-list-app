@@ -1,36 +1,34 @@
 import React, {useState, useEffect} from "react";
 import "./Home.css";
-import axios from "axios";
- 
 
-import Form from "../../subcomponents/form/Form";
-import Filter from "../../subcomponents/filter/Filter";
-import Tasklist from "../../subcomponents/tasklist/Tasklist";
-import Search from "../../subcomponents/search/Search";
-import Pagination from "../../subcomponents/pagination/Pagination";
+
+import Form from "../../utilities/form/Form";
+import Filter from "../../utilities/filter/Filter";
+import Tasklist from "../../utilities/tasklist/Tasklist";
+import Search from "../../utilities/search/Search";
+import Pagination from "../../utilities/pagination/Pagination";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faTasks } from '@fortawesome/free-solid-svg-icons';
  
  
- 
 
- 
 const Home = () => {
 
     // States
+    const lsTasks = JSON.parse(localStorage.getItem('tasks')) !== null ? JSON.parse(localStorage.getItem('tasks')) : [];
+
     const [inputText, setInputText] = useState('');
-    const [newTask, setNewTask] = useState([]);
+    const [newTask, setNewTask] = useState(lsTasks);
     const [status, setStatus] = useState('All');
     const [filteredTasks, setFilteredTasks] = useState([]);
-    const [userId, setUserId] = useState(localStorage.getItem('userId')); 
+    
     const [searchInput, setSearchInput] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
     const [currentPage, setcurrentPage] = useState(1);
-    const [itemsPerPage, setitemsPerPage] = useState(5);
-    
-    
+    const [itemsPerPage, setitemsPerPage] = useState(3);
+     
     // Pagination
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -39,34 +37,12 @@ const Home = () => {
      
     
     useEffect(() => {
-        if(localStorage.getItem('userId') === null) {
+        if(localStorage.getItem('userEmail') === null) {
             window.location.href="/login";
         }
     },[])
 
-    useEffect(() => {
-
-        const userTasks = [];
-        axios.post('https://cors-anywhere.herokuapp.com/https://todo-application-2.herokuapp.com/actionsOfUser', {
-            personId: userId, 
-        })
-        .then(res => {
-
-            if(JSON.stringify(res.data) !== '{}') {
-
-                res.data.forEach((item) => {
-    
-                    userTasks.push({text:item.name, completed:item.isDone, id:item.id});
-    
-        
-                })
-                setNewTask(userTasks);
-                
-            } 
-
-            
-        })
-    }, [])
+     
 
 
     // Functions
@@ -76,53 +52,35 @@ const Home = () => {
         const confirmeDelete = window.confirm("Delete all tasks?");
 
         if(confirmeDelete === true) {
-
-            searchResults.forEach((item,index) => {
-                axios.delete('https://cors-anywhere.herokuapp.com/https://todo-application-2.herokuapp.com/action', {
-                    data: {
-                        id: item.id
-                    } 
-                             
-                })
-                .then(res => {
-                    
-                    console.log(res); 
-                     
-                     
-                })
-
-                setNewTask([]);
-                
-                
-            })    
+            setNewTask([]); 
         }
-
-         
+    
     };
 
     
-    useEffect(() => {
-        filterHandler();    
-    }, [newTask, status, currentPage])
-
-
     // Filter
     const filterHandler = () => {
 
         switch(status) {
-            case 'completed':
+            case 'Completed':
                 setFilteredTasks(currentPageItems.filter((item) => item.completed === true))
                 break;
-            case 'uncompleted':
+            case 'Uncompleted':
                 setFilteredTasks(currentPageItems.filter((item) => item.completed === false))
+                break;
+            case 'All':
+                setFilteredTasks(currentPageItems)
                 break;
             default:
                 setFilteredTasks(currentPageItems)
                 break;
-
              
         }
     };
+
+    useEffect(() => {
+        filterHandler();    
+    }, [newTask, status, currentPage])
 
     useEffect(() => {
         searchHandler();    
@@ -163,7 +121,7 @@ const Home = () => {
 
                     {/* FORM */}
 
-                    <Form newTask={newTask} setNewTask={setNewTask} inputText={inputText} setInputText={setInputText} userId={userId}></Form>
+                    <Form newTask={newTask} setNewTask={setNewTask} inputText={inputText} setInputText={setInputText}></Form>
 
                     {/* FILTER */}
 

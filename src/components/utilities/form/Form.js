@@ -1,12 +1,10 @@
-import React from 'react';
-import axios from "axios";
+import React, {useEffect} from 'react';
+ 
 
-function Form({setInputText, inputText, setNewTask, newTask, userId}) {
-
-     
+function Form({setInputText, inputText, setNewTask, newTask}) {
 
     const inputTextHandler = (e) => {
-        setInputText(e.target.value);
+        setInputText(e.target.value.toLowerCase());
     };
 
      
@@ -14,28 +12,24 @@ function Form({setInputText, inputText, setNewTask, newTask, userId}) {
 
         e.preventDefault();
         
-         
+        const randomID = Math.random();
         if(inputText === "") {
             alert('Add a task')
         } else {
-            axios.post('https://todo-application-2.herokuapp.com/action', {
-                name: inputText,
-                isDone: false,
-                personId: userId,
+             
+            setNewTask([...newTask, {text: inputText, completed: false, id: randomID}]);
+            setInputText('');
             
-                         
-            })
-            .then(res => {
-    
-                setNewTask([...newTask, {text: res.data.name, completed:res.data.isDone, id: res.data.id}]);
-                setInputText('');
-                    
-            })
-                
+            
         }
          
     };
 
+    useEffect(() => {
+
+        localStorage.setItem('tasks', JSON.stringify(newTask));
+         
+    }, [newTask])
      
 
     return (
@@ -43,7 +37,7 @@ function Form({setInputText, inputText, setNewTask, newTask, userId}) {
            <form onSubmit={submitTaskHandler} id="tasks-form" className="needs-validation">
                 <div className="form-floating form-control-sm mb-3 rounded-0">
                     <input onChange={inputTextHandler} type="text" id="task-input" className="form-control  form-control-sm border-0 border-bottom border-1 border-secondary rounded-0 bg-transparent shadow-none" value={inputText}  placeholder="New Task"/>
-                    <label for="task-input" className="ps-2 text-primary">New Task</label>
+                    <label htmlFor="task-input" className="ps-2 text-primary">New Task</label>
                     
                 </div>
 

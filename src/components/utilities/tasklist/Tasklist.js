@@ -1,5 +1,5 @@
 import React from 'react';
-import Task from "../../subcomponents/task/Task"
+import Task from "../../utilities/task/Task"
 
 function Tasklist({newTask, setNewTask, searchResults}) {
      
